@@ -1,6 +1,6 @@
 #!/usr/bin/python2.6
 #coding=UTF-8
-import sys
+import sys,re
 reload(sys)
 sys.setdefaultencoding( "utf-8" )
 sys.path.append('/root/python/')
@@ -36,7 +36,11 @@ class Spider():
         			html_cont=self.downloader.downloader(url)
         			self.parser.jd_url_parser(html_cont,self.db)
 
-                                
+        def img_craw_urls(self,url):
+                html_cont=self.downloader.downloader(url)
+                filename=re.findall(r'/[^/]*.jpg',url)[0]
+                filename='img'+filename
+                self.parser.img_parser(html_cont,filename)
 
 if __name__=='__main__':
         obj_spider=Spider()
@@ -62,4 +66,5 @@ if __name__=='__main__':
                         print '%d线程启动成功' % (i+1)
                 except:
                         print '%d线程启动失败' % (i+1)
+
 

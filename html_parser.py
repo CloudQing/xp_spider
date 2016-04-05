@@ -22,7 +22,25 @@ class Htmlparser():
 			check_sql="url='%s'" % link
                         if not db.check('xp_jd_urls',check_sql):
                                 db.insert('xp_jd_urls',link,0)
-                        
+        
+                       
+        def jd_item_parser(self,html_cont,db):
+                if html_cont is None:
+                        return None
+
+        def img_parser(self,html_cont,file):
+                try:
+                        file=open(file,'w')
+                except:
+                        print '文件打开失败'
+                        return False
+                try:
+                        file.write(html_cont)
+                except:
+                        print '图片写入失败'
+                        return False
+                file.close()
+
 
 
         def __get_new_urls(self,soup):
@@ -44,3 +62,4 @@ class Htmlparser():
 		res_data['url']=url
                 res_data['title']=result.strip()
                 return res_data
+
