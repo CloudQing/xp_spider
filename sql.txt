@@ -1,15 +1,21 @@
 xp_jd_urls
 	uid INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+	name VARCHAR(255) NOT NULL,
 	url VARCHAR(255) NOT NULL,
 	old INT(1) NOT NULL DEFAULT 0
 
 xp_jd_goods
 	gid INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+	num BIGINT(11) UNSIGNED NOT NULL,
 	name VARCHAR(255) NOT NULL,
-	old_price INT(11) NOT NULL,
-	new_price INT(11) NOT NULL,
+	price INT(11) NOT NULL,
 	url VARCHAR(255) NOT NULL,
 	comments INT(3),
 	comments_nums INT(11),
 	pic VARCHAR(255) NOT NULL,
 
+<div id="name">
+                      <h1>BINDING宾町2016新款韩版小白鞋女系带厚底运动休闲鞋女春跑步鞋百搭松糕时尚潮中帮鞋 白银 37</h1>
+                      <div id="p-ad" class="p-ad J-ad-1688946202" clstag="shangpin|keycount|product|slogan"></div>
+                      <div id="p-ad-phone" class="p-ad"></div>
+</div>

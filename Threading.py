@@ -9,7 +9,8 @@ class jd_Threadings(threading.Thread):
 		self.id=id
 		self.obj=obj
 
-	def run(self):
+	def run(self,):
 		print '%d : 正在爬取%s类.' % (self.id,self.keyword)
-		self.obj.jd_craw_urls(self.keyword)
+		self.obj.jd_craw_urls(keyword)
+
 

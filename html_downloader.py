@@ -1,4 +1,4 @@
-import urllib2
+import urllib2,demjson
 
 class Htmldownloader():
 
@@ -6,11 +6,14 @@ class Htmldownloader():
 		if url==None or len(url)==0:
 			return
 
-		request=urllib2.Request(url)
-		request.add_header('User-Agent','Mozilla/5.0')
-		respoense=urllib2.urlopen(request)
+		
+		respoense=urllib2.urlopen(url)
 
 		if respoense.getcode() != 200:
 			return None
 			
 		return respoense.read()
+
+	def json(self,api,*vars):
+                url=api % vars;
+                return demjson.decode(self.downloader(url))

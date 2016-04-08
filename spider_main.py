@@ -4,12 +4,11 @@ import sys,re
 reload(sys)
 sys.setdefaultencoding( "utf-8" )
 sys.path.append('/root/python/')
-from spider import html_downloader,html_parser,html_outputer,url_manager,db,Threading
+from spider import html_downloader,html_parser,html_outputer,db,Threading
 class Spider():
 
         def __init__(self):
                 self.db=db.database('root','beibei','xueping')
-        	self.urlmanager=url_manager.Urlmanager()
                 self.downloader=html_downloader.Htmldownloader()
                 self.parser=html_parser.Htmlparser()
                 self.outputer=html_outputer.Htmloutputer()
@@ -36,35 +35,50 @@ class Spider():
         			html_cont=self.downloader.downloader(url)
         			self.parser.jd_url_parser(html_cont,self.db)
 
+
+        def jd_goods_api(self):
+                        r=self.db.get('xp_jd_urls','old=0')
+                        for i in range(2):
+                                db_url=r[i][1]
+                                url='http:'+r[i][1]
+                                print url
+                                self.jd_craw_good(url)
+                                where='url=\''+db_url+"'"
+                                self.db.url_update('xp_jd_urls','old',1,where)
+
+        def jd_craw_good(self,url):
+                result=list()
+                price_json_api='http://p.3.cn/prices/mgets?skuIds=J_%d'      #价格json入口
+                comment_json_api='http://club.jd.com/clubservice.aspx?method=GetCommentsCount&referenceIds=%d'        #评论json入口
+
+                id=int(re.findall('[0-9]+',url)[0])
+                print '正在爬商品:%d' % id
+                comment_obj=self.downloader.json(comment_json_api,id)
+                html_cont=self.downloader.downloader(url)
+
+                img,name=self.parser.jd_item_parser(html_cont)
+                price=self.downloader.json(price_json_api,id)[0]['p']
+                comment=comment_obj['CommentsCount'][0]['GoodRateShow']
+                comments=comment_obj['CommentsCount'][0]['CommentCount']
+                img=self.img_craw_urls(img)
+                url=url.replace('http:','')
+                self.db.insert('xp_jd_goods',id,name.encode('utf-8'),int(float(price)),url.encode('utf-8'),int(comment),int(comments),img)
+
         def img_craw_urls(self,url):
                 html_cont=self.downloader.downloader(url)
                 filename=re.findall(r'/[^/]*.jpg',url)[0]
+                name=filename
                 filename='img'+filename
                 self.parser.img_parser(html_cont,filename)
+                return name
+
+
+
+
 
 if __name__=='__main__':
         obj_spider=Spider()
-        keywords=list()
-        threads=list()
-        while 1:
-                try:
-                        num=input('需要查询的类型个数：\n')
-                        break
-                except:
-                        print '输入格式错误，请重新输入!'
-        for i in range(num):
-                keyword=raw_input('请输入查询关键字:\n')
-                keywords.append(keyword)
-                try:
-                        threads.append(Threading.jd_Threadings(keywords[i],i,obj_spider))
-                        print '%d线程创建成功' % (i+1)
-                except:
-                        print '%d线程创建失败' % (i+1)
-        for i in range(num):
-                try:
-                        threads[i].start()
-                        print '%d线程启动成功' % (i+1)
-                except:
-                        print '%d线程启动失败' % (i+1)
+	obj_spider.jd_goods_api()
+ 	obj_spider.db.close()       
 
 

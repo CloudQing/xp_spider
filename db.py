@@ -16,7 +16,7 @@ class database():
 	'''
 
         def __init__(self,user,pwd,database,addr='localhost'):
-                self.db=MySQLdb.connect(addr,user,pwd,database)
+                self.db=MySQLdb.connect(addr,user,pwd,database,charset='utf8')
                 self.cursor=self.db.cursor()
 
         '''
@@ -39,6 +39,7 @@ class database():
                 self.cursor.execute(sql)
                 return self.cursor.fetchall()
 
+                
         '''
 		**插入数据
 		@table    数据表名
@@ -49,15 +50,20 @@ class database():
                 self.cols=self.cursor.fetchall()
                 self.temp=list()
                 for i in self.cols[1:]:
-                        self.temp.append(i[0])
+                        self.temp.append(i[0].encode('utf-8'))
                 self.cols=str(tuple(self.temp)).replace('\'','')
-                sql='INSERT %s%s VALUES %s' % (table,self.cols,str(values))
-                try:
-                        self.cursor.execute(sql)
-                        self.db.commit()
-                except:
-
-                        return False
+		value=list()
+		for i in values:
+			if not isinstance(i,str):
+				i=str(i)
+			else:
+				i="'"+i+"'"
+			value.append(i)
+		value=','.join(value)
+                sql='INSERT %s%s VALUES (%s)' % (table,self.cols,value)
+		print sql
+                self.cursor.execute(sql)
+                self.db.commit()
 
         '''
 		**删除数据
@@ -83,4 +89,12 @@ class database():
                         return True
                 return False
 
-        
+        def url_update(self,table,col,value,where):
+                try:
+                        sql='UPDATE %s SET %s = %s WHERE %s' % (table,col,value,where)
+                        self.cursor.execute(sql)
+                        self.db.commit()
+                        print '修改成功'
+                except:
+                        print '修改失败'
+
