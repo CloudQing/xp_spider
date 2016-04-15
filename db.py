@@ -50,6 +50,8 @@ class database():
                 self.cols=self.cursor.fetchall()
                 self.temp=list()
                 for i in self.cols[1:]:
+                        if isinstance(i[0],long):
+                                self.temp.append(i[0])
                         self.temp.append(i[0].encode('utf-8'))
                 self.cols=str(tuple(self.temp)).replace('\'','')
 		value=list()
@@ -61,9 +63,33 @@ class database():
 			value.append(i)
 		value=','.join(value)
                 sql='INSERT %s%s VALUES (%s)' % (table,self.cols,value)
-		print sql
-                self.cursor.execute(sql)
-                self.db.commit()
+                try:
+                        self.cursor.execute(sql)
+                        self.db.commit()
+                       # print sql+':插入成功'
+                except:
+                       print '插入出错'
+
+        def insert_sql(self,table,*values):
+                self.cursor.execute('SHOW COLUMNS FROM %s' % table)
+                self.cols=self.cursor.fetchall()
+                self.temp=list()
+                for i in self.cols[1:]:
+                        if isinstance(i[0],long):
+                                self.temp.append(i[0])
+                        self.temp.append(i[0].encode('utf-8'))
+                self.cols=str(tuple(self.temp)).replace('\'','')
+                value=list()
+                for i in values:
+                        if not isinstance(i,str):
+                                i=str(i)
+                        else:
+                                i="'"+i+"'"
+                        value.append(i)
+                value=','.join(value)
+                sql='INSERT %s%s VALUES (%s)' % (table,self.cols,value)
+                return sql
+
 
         '''
 		**删除数据
@@ -97,4 +123,6 @@ class database():
                         print '修改成功'
                 except:
                         print '修改失败'
+
+
 

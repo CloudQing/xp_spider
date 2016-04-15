@@ -8,9 +8,11 @@ class jd_Threadings(threading.Thread):
 		self.keyword=keyword
 		self.id=id
 		self.obj=obj
-
-	def run(self,):
+		self.lock=threading.Lock()
+		
+	def run(self):
+		self.lock.acquire()
 		print '%d : 正在爬取%s类.' % (self.id,self.keyword)
-		self.obj.jd_craw_urls(keyword)
-
+		self.obj.jd_craw_urls(self.keyword)
+		self.lock.release()
 

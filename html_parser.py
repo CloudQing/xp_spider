@@ -1,5 +1,5 @@
 #coding=UTF-8
-import bs4,re,urlparse
+import bs4,re,urlparse,MySQLdb
 
 class Htmlparser():
 
@@ -10,12 +10,12 @@ class Htmlparser():
         def jd_url_parser(self,html_cont,db):
                 if html_cont is None:
                         return None
-                links=re.findall(r"//item\.jd\.com/[0-9]+\.html",html_cont)
+                links=re.findall(r"//item\.jd\.com/[0-9]+\.html#",html_cont)
                 for link in links:
-                        soup=bs4.BeautifulSoup(html_cont,'html.parser',from_encoding='utf-8')
 			check_sql="url='%s'" % link
+			link=link.replace('#','')
                         if not db.check('xp_jd_urls',check_sql):
-                                db.insert('xp_jd_urls',link,0)
+                                sql=db.insert('xp_jd_urls',link,0)
         
                        
         def jd_item_parser(self,html_cont):
@@ -55,4 +55,6 @@ class Htmlparser():
                     retstr = ''.join(map(lambda c:'%02x'%ord(c), buf))  
                     retstr = "x'" + retstr + "'"  
                     return retstr
+
+
 

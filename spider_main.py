@@ -1,10 +1,11 @@
 #!/usr/bin/python2.6
 #coding=UTF-8
-import sys,re
+import sys,re,time
 reload(sys)
 sys.setdefaultencoding( "utf-8" )
 sys.path.append('/root/python/')
 from spider import html_downloader,html_parser,html_outputer,db,Threading
+import time
 class Spider():
 
         def __init__(self):
@@ -38,11 +39,13 @@ class Spider():
 
         def jd_goods_api(self):
                         r=self.db.get('xp_jd_urls','old=0')
-                        for i in range(2):
+                        for i in range(len(r)):
                                 db_url=r[i][1]
                                 url='http:'+r[i][1]
-                                print url
-                                self.jd_craw_good(url)
+				try:
+                                	self.jd_craw_good(url)
+				except:
+					continue
                                 where='url=\''+db_url+"'"
                                 self.db.url_update('xp_jd_urls','old',1,where)
 
@@ -79,6 +82,5 @@ class Spider():
 if __name__=='__main__':
         obj_spider=Spider()
 	obj_spider.jd_goods_api()
- 	obj_spider.db.close()       
-
+	obj_spider.db.close()
 
