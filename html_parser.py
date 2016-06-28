@@ -22,8 +22,12 @@ class Htmlparser():
                 if html_cont is None:
                         return None
                 soup=bs4.BeautifulSoup(html_cont,'lxml',from_encoding='utf-8')
-                img='http:'+str(soup.find('img',class_='img-hover')['src'])
-                name=str(soup.find('img',class_='img-hover')['alt'])
+		try:
+                	img='http:'+str(soup.find('img',class_='img-hover')['src'])
+			name=str(soup.find('img',class_='img-hover')['alt'])
+		except:
+			img='http:'+str(soup.find('li',class_='img-hover').img['src'])
+			name=str(soup.find('li',class_='img-hover').img['alt'])
 		print 'url:'+name
                 return img,name
 

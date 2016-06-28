@@ -1,0 +1,1 @@
+INSERT xp_jd_goods(num, name, price, url, comments, comments_nums, pic) VALUES (1583359206, u'\u5b89\u59ae\u514b\u83b1\u56e0\uff08ANNE KLEIN\uff09\u5973\u58eb\u624b\u8868 \u65f6\u88c5\u8868\u65f6\u5c1a\u5973\u8868\u77f3\u82f1\u5927\u8868\u76d8\u624b\u94fe\u8868\u5957\u88c5 1470 \u9ed1\u8272\u91d1\u8272 AK-1470GBST', 1259, '//item.jd.com/1583359206.html', 98, 562, '你好')
